@@ -28,7 +28,7 @@
 <meta property="og:description" content="文章分析">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-10-20T16:24:00.000Z">
-<meta property="article:modified_time" content="2025-10-20T16:44:18.254Z">
+<meta property="article:modified_time" content="2025-10-21T07:23:09.454Z">
 <meta property="article:author" content="AoYuharu">
 <meta property="article:tag" content="Transformer入门">
 <meta property="article:tag" content="论文阅读">
@@ -176,7 +176,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-10-21 00:24:00 / Modified: 00:44:18" itemprop="dateCreated datePublished" datetime="2025-10-21T00:24:00+08:00">2025-10-21</time>
+              <time title="Created: 2025-10-21 00:24:00 / Modified: 15:23:09" itemprop="dateCreated datePublished" datetime="2025-10-21T00:24:00+08:00">2025-10-21</time>
             </span>
 
           
@@ -190,7 +190,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Transformer分析"><a href="#Transformer分析" class="headerlink" title="Transformer分析"></a>Transformer分析</h1><h2 id="论文阅读-Attention-is-All-You-Need"><a href="#论文阅读-Attention-is-All-You-Need" class="headerlink" title="[论文阅读] Attention is All You Need"></a>[论文阅读] Attention is All You Need</h2><h3 id="论文目录结构"><a href="#论文目录结构" class="headerlink" title="论文目录结构"></a>论文目录结构</h3><ol>
+        <h1 id="Transformer分析"><a href="#Transformer分析" class="headerlink" title="Transformer分析"></a>Transformer分析</h1><h2 id="论文阅读-Attention-is-All-You-Need"><a href="#论文阅读-Attention-is-All-You-Need" class="headerlink" title="[论文阅读] Attention is All You Need"></a>[论文阅读] Attention is All You Need</h2><blockquote>
+<ol>
 <li>摘要 (Abstract)</li>
 <li>引言 (Introduction)</li>
 <li>背景 (Background)</li>
@@ -199,7 +200,7 @@
 <li>4.2 注意力 (Attention)<ul>
 <li>4.2.1 缩放点积注意力机制 (Scaled Dot-Product Attention)</li>
 <li>4.2.2 多头注意力机制 (Multi-Head Attention)</li>
-<li>4.2.3 注意力机制在我们模型中的应用 (Applications of Attention in Our Model)</li>
+<li>4.2.3 注意力机制在我们模型中的应用 (Applications of Attention &gt;in Our Model)</li>
 </ul>
 </li>
 <li>4.3 基于位置的前馈网络 (Position-wise Feed-Forward Networks)</li>
@@ -223,7 +224,84 @@
 <li>结论 (Conclusion)</li>
 <li>Reference</li>
 </ol>
-<h2 id="Transformer-架构分析"><a href="#Transformer-架构分析" class="headerlink" title="[Transformer] 架构分析"></a>[Transformer] 架构分析</h2>
+</blockquote>
+<h3 id="AbStract（摘要部分）"><a href="#AbStract（摘要部分）" class="headerlink" title="AbStract（摘要部分）"></a>AbStract（摘要部分）</h3><p>论文技术的研发背景与成就概述</p>
+<h3 id="Introduction-（引言部分）"><a href="#Introduction-（引言部分）" class="headerlink" title="Introduction （引言部分）"></a>Introduction （引言部分）</h3><p>论文大背景与本篇论文的创新优化点，文中提到循环神经网络的顺序性问题，导致长文本极其容易忽略上下文关系，同时给出注意力机制的编解码器的应用。<br>抛出论文核心点：<strong>摒弃传统RNN的网络机制，完全利用注意力机制进行上下文分析</strong></p>
+<h3 id="Background-（背景部分）"><a href="#Background-（背景部分）" class="headerlink" title="Background （背景部分）"></a>Background （背景部分）</h3><p>这部分与前文摘要和引言的差异在于，这里背景不是整体的研发背景和技术需求背景，而是纯粹的技术背景。文中提到<em>Extended Neural GPU, ByteNet and ConvS2S</em>三种卷积神经网络，点出这三种的缺点在于<strong>随着序列数据的增多，上下文依赖会变得越来越强，操作步骤越来越多导致对上文遗忘</strong></p>
+<p>提出<strong>自注意力机制(Self-Attention)</strong> 作为技术大背景，引出下文Transformer的核心组件<strong>多头注意力机制(Multi-Head Attention)</strong></p>
+<h3 id="Model-Architecture-模块结构"><a href="#Model-Architecture-模块结构" class="headerlink" title="Model Architecture (模块结构)"></a>Model Architecture (模块结构)</h3><p>本文的核心部分，从多个角度进行分析，对Transformer的组成进行了详细的诠释，从编解码器到位置编码。其中最重要的注意力机制进行了更详细的阐述</p>
+<h3 id="Why-Attention-为什么要使用注意力机制"><a href="#Why-Attention-为什么要使用注意力机制" class="headerlink" title="Why Attention? (为什么要使用注意力机制)"></a>Why Attention? (为什么要使用注意力机制)</h3><p>这部分是该篇文章的一个Special Part，由于纯粹对注意力机制的使用过于新颖，因此给出特殊部分进行原因详解，文中从<strong>total computational complexity per layer</strong> , <strong>the amount of computation</strong> , <strong>length between long-range dependencies in the network</strong>三个维度进行诠释</p>
+<h3 id="Training-训练"><a href="#Training-训练" class="headerlink" title="Training (训练)"></a>Training (训练)</h3><p>训练部分给出了训练模型的所有细节，从机械层面的硬件部署到软件层面数据选择、优化器选择、正则化等内容，以及对 <strong>超参数的选择</strong> 和 <strong>调优公式</strong></p>
+<h3 id="Result-结果"><a href="#Result-结果" class="headerlink" title="Result (结果)"></a>Result (结果)</h3><p>结果层面从三个层面进行分析<strong>机器翻译</strong>(本职工作) , <strong>模型变体</strong>(模型在不同超参数情况下在特定数据集上的训练分数)</p>
+<h3 id="Conclusion-结论"><a href="#Conclusion-结论" class="headerlink" title="Conclusion (结论)"></a>Conclusion (结论)</h3><p>提出来Transformer模型的优越性和独创性，重新声明成就，同时对未来进行展望等</p>
+<h2 id="Transformer-架构分析"><a href="#Transformer-架构分析" class="headerlink" title="[Transformer] 架构分析"></a>[Transformer] 架构分析</h2><h3 id="参数与矩阵分析"><a href="#参数与矩阵分析" class="headerlink" title="参数与矩阵分析"></a>参数与矩阵分析</h3><h3 id="🔹-注意力机制核心参数与矩阵"><a href="#🔹-注意力机制核心参数与矩阵" class="headerlink" title="🔹 注意力机制核心参数与矩阵"></a>🔹 注意力机制核心参数与矩阵</h3><h4 id="核心矩阵参数"><a href="#核心矩阵参数" class="headerlink" title="核心矩阵参数"></a>核心矩阵参数</h4><ul>
+<li><strong>$d_{\text{model}} &#x3D; 512$</strong><br>单个 token 的特征维度长度。</li>
+<li><strong>$h &#x3D; 8$</strong><br>多头注意力机制的头数（保证 $d_{\text{model}}$ 可被整除）。</li>
+<li><strong>$d_k &#x3D; d_v &#x3D; \frac{d_{\text{model}}}{h}$</strong><br>每个注意力头的维度大小，通常取 $64$。</li>
+</ul>
+<h4 id="涉及矩阵"><a href="#涉及矩阵" class="headerlink" title="涉及矩阵"></a>涉及矩阵</h4><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>形状</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Embedding</strong></td>
+<td>(词汇量 × $d_{\text{model}}$)</td>
+<td>词嵌入矩阵</td>
+</tr>
+<tr>
+<td><strong>$W_Q, W_K, W_V$</strong></td>
+<td>($d_{\text{model}}$ × $d_k$)</td>
+<td>将输入向量线性变换到注意力子空间</td>
+</tr>
+<tr>
+<td><strong>$Q, K, V$</strong></td>
+<td>(序列长度 × $d_k$)</td>
+<td>Query、Key、Value 向量集合</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="注意力机制计算公式"><a href="#注意力机制计算公式" class="headerlink" title="注意力机制计算公式"></a>注意力机制计算公式</h3><h4 id="缩放点积注意力（Scaled-Dot-Product-Attention）"><a href="#缩放点积注意力（Scaled-Dot-Product-Attention）" class="headerlink" title="缩放点积注意力（Scaled Dot-Product Attention）"></a>缩放点积注意力（Scaled Dot-Product Attention）</h4><p>$$<br>\text{Attention}(Q, K, V) &#x3D; \text{softmax}!\left(\frac{QK^{T}}{\sqrt{d_k}}\right) V<br>$$</p>
+<p><strong>解释：</strong></p>
+<ol>
+<li>$QK^T$ 表示 Query 与 Key 的相似度。  </li>
+<li>除以 $\sqrt{d_k}$ 是为了防止点积结果过大导致梯度消失。  </li>
+<li>softmax 将相似度转化为概率分布。  </li>
+<li>与 $V$ 相乘后得到加权求和的结果，即注意力输出。</li>
+</ol>
+<hr>
+<h4 id="多头注意力（Multi-Head-Attention）"><a href="#多头注意力（Multi-Head-Attention）" class="headerlink" title="多头注意力（Multi-Head Attention）"></a>多头注意力（Multi-Head Attention）</h4><p>$$<br>\text{MultiHead}(Q,K,V) &#x3D; \text{Concat}(\text{head}_1, \dots, \text{head}_h)W^O<br>$$</p>
+<p>其中每个注意力头计算为：<br>$$<br>\text{head}_i &#x3D; \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)<br>$$</p>
+<hr>
+<p><strong>公式关系总结：</strong></p>
+<ul>
+<li>每个头的维度：$d_k &#x3D; d_v &#x3D; \frac{d_{\text{model}}}{h}$  </li>
+<li>最终输出维度仍为 $d_{\text{model}}$</li>
+</ul>
+<h4 id="核心公式"><a href="#核心公式" class="headerlink" title="核心公式"></a>核心公式</h4><p>Attention &#x3D; $\text{softmax}\left(\frac{QK^{T}}{\sqrt{d_{\text{model}}}}\right)V$</p>
+<h3 id="🔹-数据流动（Data-Flow-可视化形式）"><a href="#🔹-数据流动（Data-Flow-可视化形式）" class="headerlink" title="🔹 数据流动（Data Flow, 可视化形式）"></a>🔹 数据流动（Data Flow, 可视化形式）</h3><h4 id="1️⃣-输入向量"><a href="#1️⃣-输入向量" class="headerlink" title="1️⃣ 输入向量"></a>1️⃣ 输入向量</h4><p>输入批次张量：<br>$$<br>X &#x3D;<br>\begin{bmatrix}<br>x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1d_{\text{model}}} \<br>x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2d_{\text{model}}} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x_{T1} &amp; x_{T2} &amp; \cdots &amp; x_{Td_{\text{model}}}<br>\end{bmatrix}<em>{T \times d</em>{\text{model}}}<br>$$</p>
+<ul>
+<li>每一行 $x_i &#x3D; [x_{i1}, x_{i2}, \dots, x_{id_{\text{model}}}]$ 表示一个 <strong>token 向量</strong>。  </li>
+<li>整个矩阵 $X \in \mathbb{R}^{T \times d_{\text{model}}}$。</li>
+</ul>
+<hr>
+<h4 id="2️⃣-线性映射生成-Q-K-V"><a href="#2️⃣-线性映射生成-Q-K-V" class="headerlink" title="2️⃣ 线性映射生成 $Q,K,V$"></a>2️⃣ 线性映射生成 $Q,K,V$</h4><p>$$<br>\begin{aligned}<br>Q &amp;&#x3D; X W_Q, \quad &amp;W_Q \in \mathbb{R}^{d_{\text{model}} \times d_k} \<br>K &amp;&#x3D; X W_K, \quad &amp;W_K \in \mathbb{R}^{d_{\text{model}} \times d_k} \<br>V &amp;&#x3D; X W_V, \quad &amp;W_V \in \mathbb{R}^{d_{\text{model}} \times d_v}<br>\end{aligned}<br>$$</p>
+<h1 id="矩阵形状展开示意：-underbrace-begin-bmatrix-x-11-x-12-cdots-x-1d-text-model-x-21-x-22-cdots-x-2d-text-model-vdots-vdots-ddots-vdots-x-T1-x-T2-cdots-x-Td-text-model-end-bmatrix-T-times-d-text-model-X-times-underbrace-begin-bmatrix-w-11-Q-w-12-Q-cdots-w-1d-k-Q-w-21-Q-w-22-Q-cdots-w-2d-k-Q-vdots-vdots-ddots-vdots-w-d-text-model-1-Q-w-d-text-model-2-Q-cdots-w-d-text-model-d-k-Q-end-bmatrix-d-text-model-times-d-k-W-Q"><a href="#矩阵形状展开示意：-underbrace-begin-bmatrix-x-11-x-12-cdots-x-1d-text-model-x-21-x-22-cdots-x-2d-text-model-vdots-vdots-ddots-vdots-x-T1-x-T2-cdots-x-Td-text-model-end-bmatrix-T-times-d-text-model-X-times-underbrace-begin-bmatrix-w-11-Q-w-12-Q-cdots-w-1d-k-Q-w-21-Q-w-22-Q-cdots-w-2d-k-Q-vdots-vdots-ddots-vdots-w-d-text-model-1-Q-w-d-text-model-2-Q-cdots-w-d-text-model-d-k-Q-end-bmatrix-d-text-model-times-d-k-W-Q" class="headerlink" title="矩阵形状展开示意：$$\underbrace{\begin{bmatrix}x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1d_{\text{model}}} \x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2d_{\text{model}}} \\vdots &amp; \vdots &amp; \ddots &amp; \vdots \x_{T1} &amp; x_{T2} &amp; \cdots &amp; x_{Td_{\text{model}}}\end{bmatrix}{T \times d{\text{model}}}}{X}\times\underbrace{\begin{bmatrix}w{11}^{Q} &amp; w_{12}^{Q} &amp; \cdots &amp; w_{1d_k}^{Q} \w_{21}^{Q} &amp; w_{22}^{Q} &amp; \cdots &amp; w_{2d_k}^{Q} \\vdots &amp; \vdots &amp; \ddots &amp; \vdots \w_{d_{\text{model}}1}^{Q} &amp; w_{d_{\text{model}}2}^{Q} &amp; \cdots &amp; w_{d_{\text{model}}d_k}^{Q}\end{bmatrix}{d{\text{model}} \times d_k}}_{W_Q}"></a>矩阵形状展开示意：<br>$$<br>\underbrace{<br>\begin{bmatrix}<br>x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1d_{\text{model}}} \<br>x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2d_{\text{model}}} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x_{T1} &amp; x_{T2} &amp; \cdots &amp; x_{Td_{\text{model}}}<br>\end{bmatrix}<em>{T \times d</em>{\text{model}}}<br>}<em>{X}<br>\times<br>\underbrace{<br>\begin{bmatrix}<br>w</em>{11}^{Q} &amp; w_{12}^{Q} &amp; \cdots &amp; w_{1d_k}^{Q} \<br>w_{21}^{Q} &amp; w_{22}^{Q} &amp; \cdots &amp; w_{2d_k}^{Q} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>w_{d_{\text{model}}1}^{Q} &amp; w_{d_{\text{model}}2}^{Q} &amp; \cdots &amp; w_{d_{\text{model}}d_k}^{Q}<br>\end{bmatrix}<em>{d</em>{\text{model}} \times d_k}<br>}_{W_Q}</h1><p>\underbrace{<br>\begin{bmatrix}<br>q_{11} &amp; q_{12} &amp; \cdots &amp; q_{1d_k} \<br>q_{21} &amp; q_{22} &amp; \cdots &amp; q_{2d_k} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>q_{T1} &amp; q_{T2} &amp; \cdots &amp; q_{Td_k}<br>\end{bmatrix}<em>{T \times d_k}<br>}</em>{Q}<br>$$</p>
+<p>同理可得 $K, V$。</p>
+<hr>
+<h4 id="3️⃣-点积注意力"><a href="#3️⃣-点积注意力" class="headerlink" title="3️⃣ 点积注意力"></a>3️⃣ 点积注意力</h4><p>每个 token 的 Query 向量：<br>$$<br>Q_i &#x3D;<br>\begin{bmatrix}<br>q_{i1} \ q_{i2} \ \vdots \ q_{id_k}<br>\end{bmatrix}<em>{d_k \times 1}<br>,\quad<br>K_j &#x3D;<br>\begin{bmatrix}<br>k</em>{j1} \ k_{j2} \ \vdots \ k_{jd_k}<br>\end{bmatrix}_{d_k \times 1}<br>$$</p>
+<h1 id="两者点积：-Q-i-cdot-K-j-begin-bmatrix-q-i1-q-i2-cdots-q-id-k-end-bmatrix-begin-bmatrix-k-j1-k-j2-vdots-k-jd-k-end-bmatrix"><a href="#两者点积：-Q-i-cdot-K-j-begin-bmatrix-q-i1-q-i2-cdots-q-id-k-end-bmatrix-begin-bmatrix-k-j1-k-j2-vdots-k-jd-k-end-bmatrix" class="headerlink" title="两者点积：$$Q_i \cdot K_j &#x3D;\begin{bmatrix}q_{i1} &amp; q_{i2} &amp; \cdots &amp; q_{id_k}\end{bmatrix}\begin{bmatrix}k_{j1} \ k_{j2} \ \vdots \ k_{jd_k}\end{bmatrix}"></a>两者点积：<br>$$<br>Q_i \cdot K_j &#x3D;<br>\begin{bmatrix}<br>q_{i1} &amp; q_{i2} &amp; \cdots &amp; q_{id_k}<br>\end{bmatrix}<br>\begin{bmatrix}<br>k_{j1} \ k_{j2} \ \vdots \ k_{jd_k}<br>\end{bmatrix}</h1><p>\sum_{m&#x3D;1}^{d_k} q_{im} k_{jm}<br>$$</p>
+<p>整批计算：<br>$$<br>\text{Score} &#x3D; \frac{QK^T}{\sqrt{d_k}}<br>\quad \Rightarrow \quad<br>\text{Score} \in \mathbb{R}^{T \times T}<br>$$</p>
+<hr>
+<h4 id="4️⃣-注意力分布与加权求和"><a href="#4️⃣-注意力分布与加权求和" class="headerlink" title="4️⃣ 注意力分布与加权求和"></a>4️⃣ 注意力分布与加权求和</h4><p>$$<br>A &#x3D; \text{softmax}(\text{Score}) \<br>Z &#x3D; AV<br>$$</p>
+<p>展开示意（第 $i$ 个 token 输出）：<br>$$<br>Z_i &#x3D; \sum_{j&#x3D;1}^{T} A_{ij} V_j &#x3D;<br>\sum_{j&#x3D;1}^{T} A_{ij}<br>\begin{bmatrix}<br>v_{j1} \ v_{j2} \ \vdots \ v_{jd_v}<br>\end{bmatrix}<br>$$</p>
+<p>结果：<br>$$<br>Z &#x3D;<br>\begin{bmatrix}<br>z_{11} &amp; z_{12} &amp; \cdots &amp; z_{1d_v} \<br>z_{21} &amp; z_{22} &amp; \cdots &amp; z_{2d_v} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>z_{T1} &amp; z_{T2} &amp; \cdots &amp; z_{Td_v}<br>\end{bmatrix}_{T \times d_v}<br>$$</p>
+<hr>
+<h4 id="✅-总结（完整流向）"><a href="#✅-总结（完整流向）" class="headerlink" title="✅ 总结（完整流向）"></a>✅ 总结（完整流向）</h4><p>$$<br>X_{T \times d_{\text{model}}}<br>;\xrightarrow[]{W_Q,W_K,W_V};<br>Q,K,V_{T \times d_k}<br>;\xrightarrow[]{QK^T &#x2F; \sqrt{d_k}};<br>\text{Score}<em>{T \times T}<br>;\xrightarrow[]{\text{softmax}};<br>A</em>{T \times T}<br>;\xrightarrow[]{AV};<br>Z_{T \times d_v}<br>$$</p>
+
     </div>
 
     
@@ -304,7 +382,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Transformer%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">Transformer分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Attention-is-All-You-Need"><span class="nav-number">1.1.</span> <span class="nav-text">[论文阅读] Attention is All You Need</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">论文目录结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer-%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">[Transformer] 架构分析</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Transformer%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">Transformer分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-Attention-is-All-You-Need"><span class="nav-number">1.1.</span> <span class="nav-text">[论文阅读] Attention is All You Need</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AbStract%EF%BC%88%E6%91%98%E8%A6%81%E9%83%A8%E5%88%86%EF%BC%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">AbStract（摘要部分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Introduction-%EF%BC%88%E5%BC%95%E8%A8%80%E9%83%A8%E5%88%86%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">Introduction （引言部分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-%EF%BC%88%E8%83%8C%E6%99%AF%E9%83%A8%E5%88%86%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">Background （背景部分）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-Architecture-%E6%A8%A1%E5%9D%97%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.4.</span> <span class="nav-text">Model Architecture (模块结构)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-Attention-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.5.</span> <span class="nav-text">Why Attention? (为什么要使用注意力机制)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training-%E8%AE%AD%E7%BB%83"><span class="nav-number">1.1.6.</span> <span class="nav-text">Training (训练)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Result-%E7%BB%93%E6%9E%9C"><span class="nav-number">1.1.7.</span> <span class="nav-text">Result (结果)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Conclusion-%E7%BB%93%E8%AE%BA"><span class="nav-number">1.1.8.</span> <span class="nav-text">Conclusion (结论)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer-%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">[Transformer] 架构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%B8%8E%E7%9F%A9%E9%98%B5%E5%88%86%E6%9E%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">参数与矩阵分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%94%B9-%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E6%A0%B8%E5%BF%83%E5%8F%82%E6%95%B0%E4%B8%8E%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.2.</span> <span class="nav-text">🔹 注意力机制核心参数与矩阵</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%9F%A9%E9%98%B5%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">核心矩阵参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">涉及矩阵</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="nav-number">1.2.3.</span> <span class="nav-text">注意力机制计算公式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%A9%E6%94%BE%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B%EF%BC%88Scaled-Dot-Product-Attention%EF%BC%89"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">缩放点积注意力（Scaled Dot-Product Attention）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E5%A4%B4%E6%B3%A8%E6%84%8F%E5%8A%9B%EF%BC%88Multi-Head-Attention%EF%BC%89"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">多头注意力（Multi-Head Attention）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%85%AC%E5%BC%8F"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">核心公式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%94%B9-%E6%95%B0%E6%8D%AE%E6%B5%81%E5%8A%A8%EF%BC%88Data-Flow-%E5%8F%AF%E8%A7%86%E5%8C%96%E5%BD%A2%E5%BC%8F%EF%BC%89"><span class="nav-number">1.2.4.</span> <span class="nav-text">🔹 数据流动（Data Flow, 可视化形式）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-%E8%BE%93%E5%85%A5%E5%90%91%E9%87%8F"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">1️⃣ 输入向量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84%E7%94%9F%E6%88%90-Q-K-V"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">2️⃣ 线性映射生成 $Q,K,V$</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%BD%A2%E7%8A%B6%E5%B1%95%E5%BC%80%E7%A4%BA%E6%84%8F%EF%BC%9A-underbrace-begin-bmatrix-x-11-x-12-cdots-x-1d-text-model-x-21-x-22-cdots-x-2d-text-model-vdots-vdots-ddots-vdots-x-T1-x-T2-cdots-x-Td-text-model-end-bmatrix-T-times-d-text-model-X-times-underbrace-begin-bmatrix-w-11-Q-w-12-Q-cdots-w-1d-k-Q-w-21-Q-w-22-Q-cdots-w-2d-k-Q-vdots-vdots-ddots-vdots-w-d-text-model-1-Q-w-d-text-model-2-Q-cdots-w-d-text-model-d-k-Q-end-bmatrix-d-text-model-times-d-k-W-Q"><span class="nav-number">2.</span> <span class="nav-text">矩阵形状展开示意：$$\underbrace{\begin{bmatrix}x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1d_{\text{model}}} \x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2d_{\text{model}}} \\vdots &amp; \vdots &amp; \ddots &amp; \vdots \x_{T1} &amp; x_{T2} &amp; \cdots &amp; x_{Td_{\text{model}}}\end{bmatrix}{T \times d{\text{model}}}}{X}\times\underbrace{\begin{bmatrix}w{11}^{Q} &amp; w_{12}^{Q} &amp; \cdots &amp; w_{1d_k}^{Q} \w_{21}^{Q} &amp; w_{22}^{Q} &amp; \cdots &amp; w_{2d_k}^{Q} \\vdots &amp; \vdots &amp; \ddots &amp; \vdots \w_{d_{\text{model}}1}^{Q} &amp; w_{d_{\text{model}}2}^{Q} &amp; \cdots &amp; w_{d_{\text{model}}d_k}^{Q}\end{bmatrix}{d{\text{model}} \times d_k}}_{W_Q}</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-%E7%82%B9%E7%A7%AF%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="nav-number">2.0.0.1.</span> <span class="nav-text">3️⃣ 点积注意力</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E7%82%B9%E7%A7%AF%EF%BC%9A-Q-i-cdot-K-j-begin-bmatrix-q-i1-q-i2-cdots-q-id-k-end-bmatrix-begin-bmatrix-k-j1-k-j2-vdots-k-jd-k-end-bmatrix"><span class="nav-number">3.</span> <span class="nav-text">两者点积：$$Q_i \cdot K_j &#x3D;\begin{bmatrix}q_{i1} &amp; q_{i2} &amp; \cdots &amp; q_{id_k}\end{bmatrix}\begin{bmatrix}k_{j1} \ k_{j2} \ \vdots \ k_{jd_k}\end{bmatrix}</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-%E6%B3%A8%E6%84%8F%E5%8A%9B%E5%88%86%E5%B8%83%E4%B8%8E%E5%8A%A0%E6%9D%83%E6%B1%82%E5%92%8C"><span class="nav-number">3.0.0.1.</span> <span class="nav-text">4️⃣ 注意力分布与加权求和</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E2%9C%85-%E6%80%BB%E7%BB%93%EF%BC%88%E5%AE%8C%E6%95%B4%E6%B5%81%E5%90%91%EF%BC%89"><span class="nav-number">3.0.0.2.</span> <span class="nav-text">✅ 总结（完整流向）</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
